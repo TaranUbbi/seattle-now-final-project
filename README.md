@@ -36,7 +36,7 @@ Designed to be interactive and visually engaging for showcasing web development 
 ## 📫 Contact / Suggestions
 
 Reach me on Instagram for feedback or suggestions:  
-[@YourInstagramHandle](https://instagram.com/taran_ubbi)
+[@taran_ubbi](https://instagram.com/taran_ubbi)
 
 ---
 
