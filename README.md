@@ -15,15 +15,6 @@ It’s a **Flask website** featuring **weather, events, news, food, history, att
 
 ---
 
-## 📸 Screenshots
-
-![Homepage Screenshot](img/screenshots/homepage.png)  
-![Attractions Screenshot](img/screenshots/attractions.png)  
-
-*(Add more screenshots as desired)*
-
----
-
 ## 🔗 Live Demo
 
 > Coming soon!  
