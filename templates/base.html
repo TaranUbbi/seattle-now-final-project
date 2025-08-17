@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Seattle Now - {% block title %}{% endblock %}</title>
+
+        <style>
+            * {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+            }
+
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                background-color: #c0e6a8;
+                /* soft, pleasant green */
+                color: #1b3a2e;
+                opacity: 0;
+                transition: opacity 0.5s ease-in-out, background 0.7s ease;
+            }
+
+            body.loaded {
+                opacity: 1;
+            }
+
+
+            header {
+                position: sticky;
+                top: 0;
+                z-index: 999;
+                background-color: rgba(47, 111, 78, 0.95);
+                padding: 10px 0;
+                border-bottom-left-radius: 12px;
+                border-bottom-right-radius: 12px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                backdrop-filter: blur(6px);
+                transition: background 0.3s, opacity 0.3s;
+            }
+
+            header h1 {
+                color: white;
+                font-size: 2.2rem;
+                margin-bottom: 8px;
+                text-align: center;
+                text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.6);
+            }
+
+            nav {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 10px;
+                margin-bottom: 6px;
+            }
+
+            nav a {
+                color: white;
+                text-decoration: none;
+                font-weight: bold;
+                padding: 8px 16px;
+                border-radius: 6px;
+                font-size: 1.2rem;
+                transition: all 0.3s ease;
+            }
+
+            nav a:hover {
+                background-color: #3f8f5e;
+                transform: scale(1.05);
+                box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+            }
+
+
+            header #xp-bar-container {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                width: 90%;
+                max-width: 220px;
+                margin-top: 6px;
+            }
+
+            header #xp-bar-container #level-display {
+                font-size: 1rem;
+                margin-bottom: 4px;
+                font-weight: bold;
+                color: #ffd700;
+                text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
+            }
+
+            header #xp-bar-container #xp-bar {
+                width: 100%;
+                height: 10px;
+                background: rgba(255, 255, 255, 0.3);
+                border-radius: 8px;
+                overflow: hidden;
+            }
+
+            header #xp-bar-container #xp-fill {
+                height: 100%;
+                width: 0%;
+                background: linear-gradient(270deg, #ffd700, #fff176, #ffd700);
+                background-size: 600% 100%;
+                animation: moveGradient 3s linear infinite;
+                transition: width 0.5s ease;
+            }
+
+            @keyframes moveGradient {
+                0% {
+                    background-position: 0% 0%;
+                }
+
+                50% {
+                    background-position: 100% 0%;
+                }
+
+                100% {
+                    background-position: 0% 0%;
+                }
+            }
+
+            header #xp-bar-container button {
+                margin-top: 4px;
+                padding: 4px 10px;
+                font-size: 0.85rem;
+                background: linear-gradient(135deg, #66bb6a, #2f6f4e);
+                color: white;
+                border-radius: 6px;
+                border: none;
+                cursor: pointer;
+                box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+                transition: background 0.3s, transform 0.2s;
+            }
+
+            header #xp-bar-container button:hover {
+                background: linear-gradient(135deg, #5aae5e, #27613e);
+            }
+
+            header #xp-bar-container button:active {
+                transform: translateY(1px) scale(0.98);
+            }
+
+
+            main {
+                width: 100%;
+                padding: 30px 50px;
+                display: flex;
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+
+            footer {
+                text-align: center;
+                color: #4a7c59;
+                margin: 30px 0 15px;
+                font-size: 0.9rem;
+            }
+
+
+            .card,
+            .weather-card,
+            .activity-card,
+            .news-card,
+            .sports-card {
+                background: linear-gradient(135deg, #d0e9d5, #b5e7a0);
+                border-radius: 14px;
+                padding: 20px;
+                margin-bottom: 20px;
+                box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+                text-align: center;
+                transition: transform 0.3s, box-shadow 0.3s, background 0.3s;
+            }
+
+            .card:hover,
+            .weather-card:hover,
+            .activity-card:hover {
+                transform: translateY(-4px) scale(1.02);
+                box-shadow: 0 8px 18px rgba(0, 0, 0, 0.3);
+                background: linear-gradient(135deg, #c0e3c0, #a8d690);
+            }
+
+
+            h1 {
+                font-size: 2.4rem;
+                margin-bottom: 30px;
+                text-align: center;
+                text-shadow: 2px 2px #a0d68f;
+            }
+
+            h2 {
+                font-size: 1.8rem;
+                margin-bottom: 16px;
+                color: #2f6f4e;
+                text-shadow: 1px 1px #b5e7a0;
+            }
+
+            h3 {
+                font-size: 1.4rem;
+                margin-bottom: 12px;
+            }
+
+
+            .cta-button,
+            .button,
+            .quiz-btn,
+            #revealFunFact,
+            #resetProgress {
+                display: inline-block;
+                font-weight: bold;
+                font-size: 1.1rem;
+                padding: 8px 20px;
+                border-radius: 10px;
+                text-decoration: none;
+                cursor: pointer;
+                transition: transform 0.3s, background-color 0.3s, box-shadow 0.3s;
+                box-shadow: 0 5px 12px rgba(0, 0, 0, 0.25);
+                margin-top: 8px;
+            }
+
+
+            .fun-fact {
+                background: linear-gradient(135deg, #a0d68f, #c0e3c0);
+                padding: 20px;
+                border-radius: 14px;
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.18);
+                margin: 0 auto 25px auto;
+                font-size: 1.2rem;
+                font-weight: 500;
+                text-align: center;
+                width: 90%;
+                max-width: 950px;
+                overflow: hidden;
+            }
+
+
+            #backToTop {
+                display: none;
+                position: fixed;
+                bottom: 30px;
+                right: 30px;
+                font-size: 1.4rem;
+                border: none;
+                background-color: #2f6f4e;
+                color: white;
+                cursor: pointer;
+                padding: 10px 14px;
+                border-radius: 50%;
+                box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+                transition: background-color 0.3s, transform 0.3s;
+            }
+
+            #backToTop:hover {
+                background-color: #27613e;
+                transform: scale(1.08);
+            }
+
+
+            .fade-in {
+                animation: fadeInUp 0.8s forwards;
+            }
+
+            @keyframes fadeInUp {
+                0% {
+                    opacity: 0;
+                    transform: translateY(15px);
+                }
+
+                100% {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
+
+            .cards-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+                gap: 20px;
+                justify-items: center;
+                justify-content: center;
+                width: 95%;
+                margin: 0 auto 50px;
+            }
+
+            .sports-card {
+                width: 320px !important;
+                max-width: none !important;
+                min-height: 220px;
+                padding: 30px;
+            }
+
+            @media (max-width: 1024px) {
+                main {
+                    padding: 30px 20px;
+                }
+            }
+
+            @media (max-width: 480px) {
+                header h1 {
+                    font-size: 1.6rem;
+                }
+
+                nav a {
+                    font-size: 0.9rem;
+                    padding: 6px 10px;
+                }
+
+                h1 {
+                    font-size: 1.8rem;
+                }
+
+                h2 {
+                    font-size: 1.4rem;
+                }
+
+                h3 {
+                    font-size: 1.2rem;
+                }
+
+                .card,
+                .weather-card,
+                .activity-card {
+                    padding: 15px;
+                }
+
+                .fun-fact {
+                    font-size: 1rem;
+                    padding: 15px;
+                }
+
+                .cta-button,
+                .button,
+                .quiz-btn,
+                #revealFunFact,
+                #resetProgress {
+                    font-size: 0.9rem;
+                    padding: 8px 16px;
+                }
+            }
+        </style>
+
+
+        {% block head %}{% endblock %}
+    </head>
+
+    <body>
+        <header>
+            <h1>Seattle Now</h1>
+            <nav>
+                <a href="{{ url_for('index') }}">🏠 Home</a>
+                <a href="{{ url_for('weather') }}">🌤 Weather</a>
+                <a href="{{ url_for('news') }}">📰 News</a>
+                <a href="{{ url_for('events') }}">🎉 Events</a>
+                <a href="{{ url_for('sports') }}">🏈 Sports</a>
+                <a href="{{ url_for('food') }}">🍽 Food</a>
+                <a href="{{ url_for('history') }}">🏛 History</a>
+                <a href="{{ url_for('attractions') }}">🌟 Attractions</a>
+                <a href="{{ url_for('things_to_do') }}">🎡 Activities</a>
+            </nav>
+
+            <!-- XP Bar inside header -->
+            <div id="xp-bar-container">
+                <span id="level-display">Level 1</span>
+                <div id="xp-bar">
+                    <div id="xp-fill"></div>
+                </div>
+                <button id="resetProgress">Reset Progress</button>
+            </div>
+        </header>
+
+        {% if fun_fact %}
+            <div class="fun-fact">
+                <div id="fun-fact-hidden" style="display:none; opacity:0; transform: translateY(15px); transition: opacity 0.5s, transform 0.5s;">
+                    💡 Fun Fact: {{ fun_fact }}
+                </div>
+                <div id="fun-fact-prompt">
+                    🎲 Click the button to reveal today’s fun fact!<br>
+                    <button id="revealFunFact">Reveal Fun Fact</button>
+                </div>
+            </div>
+        {% endif %}
+
+        <div class="quiz-container" id="quiz-container" style="display:none;">
+            <div class="card" id="quiz-card">
+                <h3>🎯 Seattle Quiz</h3>
+                <p id="quiz-question"></p>
+                <div id="quiz-answers"></div>
+                <p id="quiz-feedback" style="margin-top:10px;font-weight:bold;"></p>
+                <p id="streak-display" style="margin-top:5px;font-weight:bold;color:#ff9800;">🔥 Streak: 0</p>
+            </div>
+        </div>
+
+        <main>{% block content %}{% endblock %}</main>
+        <footer>
+  &copy; 2025 Seattle Now | Contact:
+  <a href="https://instagram.com/taran_ubbi" target="_blank">Instagram</a>
+  for suggestions!
+</footer>
+        <button id="backToTop" title="Back to top">↑</button>
+
+        <script>
+            const xpFill = document.getElementById('xp-fill');
+            const levelDisplay = document.getElementById('level-display');
+            const streakDisplay = document.getElementById('streak-display');
+            const backToTopBtn = document.getElementById("backToTop");
+            const header = document.querySelector('header');
+
+            let xp = parseInt(localStorage.getItem('xp')) || 0;
+            let level = Math.floor(xp / 100) + 1;
+            let streak = parseInt(localStorage.getItem('streak')) || 0;
+
+            function updateXPBar() {
+                const xpForLevel = (level - 1) * 100;
+                const xpIntoLevel = xp - xpForLevel;
+                const percent = Math.min((xpIntoLevel / 100) * 100, 100);
+                xpFill.style.width = percent + '%';
+                levelDisplay.textContent = `Level ${level}`;
+                if (streakDisplay) streakDisplay.textContent = `🔥 Streak: ${streak}`;
+            }
+
+            function gainXP(amount) {
+                xp += amount;
+                localStorage.setItem('xp', xp);
+                const newLevel = Math.floor(xp / 100) + 1;
+                if (newLevel > level) level = newLevel;
+                updateXPBar();
+            }
+
+            gainXP(5);
+
+            const revealBtn = document.getElementById('revealFunFact');
+            const funFactHidden = document.getElementById('fun-fact-hidden');
+            const funFactPrompt = document.getElementById('fun-fact-prompt');
+            revealBtn?.addEventListener('click', () => {
+                funFactPrompt.style.display = 'none';
+                funFactHidden.style.display = 'block';
+                setTimeout(() => {
+                    funFactHidden.style.opacity = 1;
+                    funFactHidden.style.transform = 'translateY(0)';
+                    gainXP(20);
+                }, 50);
+            });
+
+            document.getElementById('resetProgress').addEventListener('click', () => {
+                if (confirm("Are you sure you want to reset all your progress?")) {
+                    localStorage.clear();
+                    location.reload();
+                }
+            });
+
+            window.addEventListener("scroll", () => {
+                const scrollTop = window.scrollY;
+                header.style.opacity = Math.max(1 - (scrollTop / 300) * 0.2, 0.75);
+                backToTopBtn.style.display = scrollTop > 300 ? "block" : "none";
+            });
+            backToTopBtn.addEventListener("click", () => {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+
+            window.addEventListener('load', () => {
+                document.body.classList.add('loaded');
+                updateXPBar();
+            });
+
+            document.querySelectorAll('nav a').forEach(link => {
+                link.addEventListener('click', () => gainXP(2));
+            });
+
+            document.getElementById('quiz-container')?.addEventListener('click', () => gainXP(10));
+        </script>
+    </body>
+
+</html>

@@ -1,0 +1,182 @@
+{% extends "base.html" %}
+{% block title %}Home{% endblock %}
+
+{% block content %}
+
+<!-- Hero Section -->
+    {% set hero_images = [
+    'img/attractions/aquarium.jpg',
+    'img/attractions/chihuly.jpg',
+    'img/attractions/pike.jpg',
+    'img/attractions/space_needle.jpg',
+    'img/attractions/kerry.jpg'
+    ] %}
+    {% set hero_image = hero_images|random %}
+
+    <div id="hero" style="
+                          position: relative;
+                          border-radius: 12px;
+                          color: white;
+                          text-align: center;
+                          padding: 140px 20px;
+                          margin-bottom: 60px;
+                          overflow: hidden;
+                          background-image: url('{{ url_for('static', filename=hero_image) }}');
+                          background-size: cover;
+                          background-position: center;
+                          transition: transform 1s ease;
+                         ">
+        <div style="position:absolute; top:0; left:0; width:100%; height:100%; background: linear-gradient(to bottom, rgba(0,0,0,0.35), rgba(0,0,0,0.35)); z-index:1;"></div>
+        <div style="position: relative; z-index: 2;">
+            <h1 style="font-size: 4rem; font-weight: bold; color: white; text-shadow: 2px 2px 10px rgba(0,0,0,0.8); margin-bottom: 25px;">
+                Welcome to Seattle Now!
+            </h1>
+            <p style="font-size: 2rem; color: #f0f0f0; text-shadow: 1px 1px 6px rgba(0,0,0,0.6); margin-bottom: 35px;">
+                Your guide to Seattle’s food, culture, history, events, and fun things to do!
+            </p>
+            <a href="#explore" class="cta-button" style="
+                                                         background: linear-gradient(135deg, #4caf50, #2f6f4e);
+                                                         color:white;
+                                                         padding: 18px 36px;
+                                                         border-radius: 12px;
+                                                         text-decoration: none;
+                                                         font-weight: bold;
+                                                         font-size: 1.3rem;
+                                                         box-shadow: 0 6px 15px rgba(0,0,0,0.35);
+                                                         transition: transform 0.3s, box-shadow 0.3s, background 0.3s;">
+                Explore Seattle
+            </a>
+        </div>
+    </div>
+
+    <div id="explore" style="display: flex; flex-direction: column; gap: 50px; align-items: center;">
+
+        {% for section in [
+        {'title':'🍽 Food & Dining', 'desc':'Discover Seattle’s iconic restaurants, seafood, and local flavors.', 'url': 'food', 'images': ['canlis.jpg','cheese.jpg','chowder.jpg','nouveau.jpg','oyster.jpg','pink.jpg','theo.jpg','tilikum.jpg'], 'alt':'Food'},
+        {'title':'🏛 History & Culture', 'desc':'Learn about Seattle’s rich past and explore museums, landmarks, and historic neighborhoods.', 'url': 'history', 'images': ['c21.jpg','founding.jpg','klondike.jpg','pioneer.jpg','water.jpg','tech.jpg'], 'alt':'History'},
+        {'title':'🌟 Top Attractions', 'desc':'See the best of Seattle! Pike Place Market, Space Needle, Chihuly Garden, and more.', 'url': 'attractions', 'images': ['aquarium.jpg','chihuly.jpg','pike.jpg','space_needle.jpg','kerry.jpg'], 'alt':'Attractions'},
+        {'title':'🎡 Fun Things To Do', 'desc':'From kayaking to the Seattle Great Wheel, explore all the fun activities Seattle offers!', 'url': 'things_to_do', 'images': ['ballard.jpg','ferry.jpg','gas.jpg','olympic.jpg','underground.jpg','wheel.jpg','kayak.jpg'], 'alt':'Things to Do'}
+        ] %}
+
+        <div class="card rotating-card" data-images='[
+                                                     {% for img in section.images %}"{{ url_for('static', filename='img/' ~ section.url ~ '/' ~ img) }}"{% if not loop.last %},{% endif %}{% endfor %}
+                                                     ]'>
+            <div style="position:relative;">
+                <img src="{{ url_for('static', filename='img/' ~ section.url ~ '/' ~ section.images[0]) }}" alt="{{ section.alt }}">
+                <div style="position:absolute; top:0; left:0; width:100%; height:100%; background: linear-gradient(to bottom, rgba(0,0,0,0.15), rgba(0,0,0,0.15)); border-radius: 12px 12px 0 0;"></div>
+            </div>
+            <div class="card-content" style="padding: 20px; text-align:center;">
+                <h3>{{ section.title }}</h3>
+                <p style="font-size:1.1rem; color:#2f6f4e;">{{ section.desc }}</p>
+                <a href="{{ url_for(section.url) }}" class="button" style="
+                                                                           display:inline-block;
+                                                                           margin-top:12px;
+                                                                           padding:12px 25px;
+                                                                           background: linear-gradient(135deg, #4caf50, #2f6f4e);
+                                                                           color:white;
+                                                                           border-radius:10px;
+                                                                           text-decoration:none;
+                                                                           font-weight:bold;
+                                                                           transition: transform 0.3s, box-shadow 0.3s;
+                                                                          ">Explore</a>
+            </div>
+        </div>
+
+{% endfor %}
+</div>
+
+<!-- Scripts -->
+<script>
+    document.querySelectorAll('.card').forEach(card => {
+        card.addEventListener('mouseenter', () => {
+            card.style.transform = 'scale(1.05)';
+            card.style.boxShadow = '0 12px 25px rgba(27,58,46,0.35)';
+        });
+        card.addEventListener('mouseleave', () => {
+            card.style.transform = 'scale(1)';
+            card.style.boxShadow = '0 6px 15px rgba(27,58,46,0.25)';
+        });
+    });
+
+    document.querySelectorAll('.rotating-card').forEach((card, cardIndex) => {
+        const img = card.querySelector('img');
+        const images = JSON.parse(card.dataset.images);
+        let index = 0;
+        setTimeout(() => { // staggered start
+            setInterval(() => {
+                if (images.length <= 1) return;
+                const nextIndex = (index + 1) % images.length;
+                const fadeDuration = 1200;
+                img.style.transition = `opacity ${fadeDuration}ms ease-in-out, transform ${fadeDuration}ms ease`;
+                img.style.opacity = 0;
+                img.style.transform = 'scale(1.05)';
+                setTimeout(() => {
+                    img.src = images[nextIndex];
+                    img.style.opacity = 1;
+                    img.style.transform = 'scale(1)';
+                    index = nextIndex;
+                }, fadeDuration);
+            }, 5000);
+        }, cardIndex * 800);
+    });
+
+    document.querySelector('.cta-button').addEventListener('click', e => {
+        e.preventDefault();
+        document.querySelector('#explore').scrollIntoView({
+            behavior: 'smooth'
+        });
+    });
+
+    const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = 1;
+                entry.target.style.transform = 'translateY(0)';
+            }
+        });
+    }, {
+        threshold: 0.1
+    });
+    document.querySelectorAll('.rotating-card').forEach(card => {
+        card.style.opacity = 0;
+        card.style.transform = 'translateY(20px)';
+        observer.observe(card);
+    });
+</script>
+
+<style>
+    .card img {
+        width: 100%;
+        height: 350px;
+        object-fit: cover;
+        border-radius: 12px 12px 0 0;
+        transition: transform 0.6s ease;
+    }
+
+    .card {
+        max-width: 1000px;
+        width: 90%;
+        border-radius: 12px;
+        box-shadow: 0 6px 15px rgba(27, 58, 46, 0.25);
+        overflow: hidden;
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    @media (max-width: 768px) {
+        .card img {
+            height: 250px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .card img {
+            height: 180px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+        }
+    }
+</style>
+
+{% endblock %}

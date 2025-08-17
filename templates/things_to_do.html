@@ -1,0 +1,206 @@
+{% extends "base.html" %}
+{% block title %}Activities{% endblock %}
+
+{% block head %}
+    <style>
+        h1 {
+            text-align: center;
+            margin-bottom: 50px;
+            color: #2f6f4e;
+            font-size: 2.4rem;
+            text-shadow: 1px 1px #a0d68f;
+        }
+
+        .activities-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            width: 95%;
+            max-width: 1300px;
+            margin: 0 auto 60px auto;
+            padding: 0 20px;
+        }
+
+        .activity-card {
+            background: linear-gradient(135deg, #d0e9d5, #b5e7a0);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 8px 22px rgba(27, 58, 46, 0.25);
+            transition: transform 0.3s, box-shadow 0.3s, background 0.3s;
+            opacity: 0;
+            transform: translateY(20px);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .activity-card:hover {
+            transform: translateY(-6px) scale(1.03);
+            box-shadow: 0 16px 35px rgba(27, 58, 46, 0.35);
+            background: linear-gradient(135deg, #c0e3c0, #a8d690);
+        }
+
+        .image-container {
+            height: 220px;
+            overflow: hidden;
+        }
+
+        .image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.4s ease, filter 0.4s ease;
+        }
+
+        .activity-card:hover img {
+            transform: scale(1.08);
+            filter: brightness(1.05);
+        }
+
+        .card-content {
+            padding: 20px;
+            text-align: center;
+        }
+
+        .card-content h2 {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+            color: #1b3a2e;
+        }
+
+        .card-content p {
+            font-size: 1.1rem;
+            line-height: 1.5;
+            color: #2f6b2f;
+            margin-bottom: 10px;
+        }
+
+        .address {
+            font-size: 1rem;
+            color: #1b3a2e;
+            margin-bottom: 12px;
+            font-style: italic;
+        }
+
+        a.view-website {
+            display: inline-block;
+            margin-top: 12px;
+            background: linear-gradient(135deg, #2f6f4e, #1b3a2e);
+            color: #fff;
+            padding: 10px 22px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: transform 0.3s, box-shadow 0.3s, background 0.3s;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+        }
+
+        a.view-website:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+            background: linear-gradient(135deg, #45a049, #27613e);
+        }
+
+        .fade-in {
+            animation: fadeInUp 0.8s forwards;
+        }
+
+        @keyframes fadeInUp {
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 1200px) {
+            .activities-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 25px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .activities-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .card-content h2 {
+                font-size: 1.5rem;
+            }
+
+            .card-content p,
+            .address {
+                font-size: 0.95rem;
+            }
+
+            a.view-website {
+                font-size: 0.95rem;
+                padding: 8px 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .card-content h2 {
+                font-size: 1.3rem;
+            }
+
+            .card-content p,
+            .address {
+                font-size: 0.85rem;
+            }
+
+            a.view-website {
+                font-size: 0.85rem;
+                padding: 6px 16px;
+            }
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <h1>Fun Things To Do in Seattle</h1>
+
+    {% if activities_list %}
+        <div class="activities-grid">
+            {% for item in activities_list %}
+                <div class="activity-card fade-in" style="animation-delay: {{ loop.index0 * 0.1 }}s;">
+                    <div class="image-container">
+                        <img src="{{ url_for('static', filename=item.image) }}" alt="{{ item.title }}">
+                    </div>
+                    <div class="card-content">
+                        <h2>🎯 {{ item.title }}</h2>
+                        <p>{{ item.description }}</p>
+                        {% if item.address %}
+                            <div class="address">📍 {{ item.address }}</div>
+                        {% endif %}
+                        {% if item.link %}
+                            <a href="{{ item.link }}" target="_blank" class="view-website">View Website 🌐</a>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p style="text-align: center; font-size: 1rem; color:#2f6b2f;">No activities available.</p>
+    {% endif %}
+
+    <script>
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = 1;
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, {
+            threshold: 0.1
+        });
+
+        document.querySelectorAll('.activity-card').forEach(card => observer.observe(card));
+    </script>
+{% endblock %}

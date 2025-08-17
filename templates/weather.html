@@ -1,0 +1,206 @@
+{% extends "base.html" %}
+{% block title %}Weather{% endblock %}
+
+{% block head %}
+    <style>
+        body {
+            font-family: 'Segoe UI', 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            transition: background 1s ease;
+        }
+
+        h1 {
+            font-size: 2.8rem;
+            font-weight: 700;
+            margin-bottom: 40px;
+            color: #2f6f4e;
+            text-shadow: 1.5px 1.5px #a0d68f;
+            text-align: center;
+        }
+
+        .weather-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 40px;
+            padding: 40px 20px;
+        }
+
+        .weather-card {
+            width: 100%;
+            max-width: 450px;
+            background: #c8e7c3;
+            border-radius: 18px;
+            padding: 35px 25px;
+            text-align: center;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+            transition: transform 0.3s, box-shadow 0.3s;
+            animation: fadeInUp 0.8s forwards;
+        }
+
+        .weather-card:hover {
+            transform: translateY(-6px) scale(1.03);
+            box-shadow: 0 14px 28px rgba(0, 0, 0, 0.22);
+        }
+
+        .weather-card h2 {
+            font-size: 2.6rem;
+            margin-bottom: 12px;
+            color: #1f4f2e;
+        }
+
+        .weather-card p.temperature {
+            font-size: 2.6rem;
+            font-weight: 700;
+            color: #2f6b2f;
+            margin: 10px 0;
+        }
+
+        .weather-card p.description {
+            font-size: 1.6rem;
+            color: #3a6b3a;
+            margin: 4px 0;
+            text-transform: capitalize;
+        }
+
+        .weather-card img {
+            margin-top: 15px;
+            width: 140px;
+            height: 140px;
+        }
+
+        .weather-tips {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            max-width: 600px;
+            width: 100%;
+        }
+
+        .weather-tip {
+            background: #e6f6e8;
+            padding: 22px;
+            border-radius: 14px;
+            box-shadow: 0 5px 14px rgba(0, 0, 0, 0.15);
+            font-size: 1.4rem;
+            font-weight: 500;
+            transition: transform 0.3s, box-shadow 0.3s, background 0.3s;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .weather-tip:hover {
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.18);
+            background: #dff2e1;
+        }
+
+        .fade-in {
+            animation: fadeInUp 0.8s forwards;
+        }
+
+        @keyframes fadeInUp {
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 2rem;
+                margin-bottom: 30px;
+            }
+
+            .weather-card {
+                padding: 25px 18px;
+            }
+
+            .weather-card h2 {
+                font-size: 2rem;
+            }
+
+            .weather-card p.temperature {
+                font-size: 2rem;
+            }
+
+            .weather-card p.description {
+                font-size: 1.3rem;
+            }
+
+            .weather-card img {
+                width: 120px;
+                height: 120px;
+            }
+
+            .weather-tip {
+                font-size: 1.1rem;
+                padding: 16px;
+            }
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <h1>Seattle Weather</h1>
+
+    {% if weather %}
+        <div class="weather-container">
+
+            <div class="weather-card fade-in">
+                <h2>{{ weather.city }}</h2>
+                <p class="temperature">{{ weather.temperature }}°F</p>
+                <p class="description">{{ weather.description }}</p>
+                {% if weather.icon %}
+                    <img src="https://openweathermap.org/img/wn/{{ weather.icon }}@4x.png" alt="Weather icon">
+                {% endif %}
+            </div>
+
+            <div class="weather-tips">
+                <div class="weather-tip fade-in" style="animation-delay: 0.1s;">
+                    Today is {{ current_date }} – perfect day to explore Pike Place Market!
+                </div>
+                <div class="weather-tip fade-in" style="animation-delay: 0.3s;">
+                    Consider visiting Kerry Park for stunning city views while enjoying the weather.
+                </div>
+                <div class="weather-tip fade-in" style="animation-delay: 0.5s;">
+                    Seattle coffee stop? Check out your favorite café near downtown!
+                </div>
+            </div>
+
+        </div>
+
+        <script>
+            const desc = "{{ weather.description|lower }}";
+            const body = document.body;
+
+            if (desc.includes("clear")) {
+                body.style.background = "linear-gradient(135deg, #fff8b0, #ffe680)";
+            } else if (desc.includes("thunderstorm")) {
+                body.style.background = "linear-gradient(135deg, #141e30, #243b55)";
+            } else if (desc.includes("rain") || desc.includes("drizzle")) {
+                body.style.background = "linear-gradient(135deg, #6a86ff, #a8b9ff)";
+            } else if (desc.includes("cloud")) {
+                body.style.background = "linear-gradient(135deg, #c3cbd6, #5a6978)";
+            } else if (desc.includes("snow") || desc.includes("sleet")) {
+                body.style.background = "linear-gradient(135deg, #e0f7fa, #b2ebf2)";
+            } else if (desc.includes("fog") || desc.includes("mist") || desc.includes("haze") || desc.includes("smoke")) {
+                body.style.background = "linear-gradient(135deg, #d7d2cc, #304352)";
+            } else if (desc.includes("overcast")) {
+                body.style.background = "linear-gradient(135deg, #757f9a, #d7dde8)";
+            } else if (desc.includes("dust") || desc.includes("sand") || desc.includes("ash")) {
+                body.style.background = "linear-gradient(135deg, #c2b280, #a68b5b)";
+            } else {
+                body.style.background = "#c8e7c3"; // default soft green
+            }
+        </script>
+    {% else %}
+        <p style="text-align:center; font-size:1.5rem; color:#406040;">Weather data not available.</p>
+    {% endif %}
+{% endblock %}

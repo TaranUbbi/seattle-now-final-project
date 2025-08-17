@@ -1,0 +1,183 @@
+{% extends "base.html" %}
+{% block title %}Food & Drink{% endblock %}
+
+{% block head %}
+    <style>
+        .food-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 25px;
+            width: 95%;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        @media (min-width: 768px) {
+            .food-container {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 30px;
+            }
+        }
+
+
+        .food-card {
+            background-color: #c8e7c3;
+            box-shadow: 0 6px 15px rgba(27, 58, 46, 0.18);
+            border-radius: 12px;
+            padding: 20px;
+            transition: transform 0.3s, box-shadow 0.3s, background 0.3s;
+            opacity: 0;
+            transform: translateY(20px);
+            display: flex;
+            flex-direction: column;
+            max-width: 500px;
+            width: 100%;
+        }
+
+
+        .food-card:hover {
+            transform: translateY(-6px) scale(1.03);
+            box-shadow: 0 12px 28px rgba(27, 58, 46, 0.25);
+            background-color: #d4f0d9;
+        }
+
+
+        .food-card img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .food-card img:hover {
+            transform: scale(1.02);
+            box-shadow: 0 8px 25px rgba(27, 58, 46, 0.2);
+        }
+
+
+        .food-card h2 {
+            font-size: 1.7rem;
+            margin-bottom: 8px;
+            color: #1b3a2e;
+            transition: color 0.3s;
+        }
+
+        .food-card p {
+            font-size: 1.1rem;
+            line-height: 1.5;
+            color: #2f6b2f;
+            margin: 5px 0;
+            transition: color 0.3s;
+        }
+
+        .food-card:hover h2,
+        .food-card:hover p {
+            color: #1b4c2e;
+        }
+
+
+        .food-card a.button {
+            display: inline-block;
+            margin-top: 12px;
+            padding: 10px 18px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, #4caf50, #2f6f4e);
+            color: #fff;
+            text-decoration: none;
+            font-weight: bold;
+            transition: transform 0.3s, background 0.3s, box-shadow 0.3s;
+        }
+
+        .food-card a.button:hover {
+            background: linear-gradient(135deg, #3e8a3a, #27613e);
+            transform: scale(1.05);
+            box-shadow: 0 6px 18px rgba(27, 58, 46, 0.25);
+        }
+
+
+        .fade-in {
+            animation: fadeInUp 0.8s forwards;
+        }
+
+        @keyframes fadeInUp {
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+
+        h1 {
+            text-align: center;
+            margin-bottom: 40px;
+            color: #2f6f4e;
+        }
+
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 2rem;
+                margin-bottom: 30px;
+            }
+
+            .food-card h2 {
+                font-size: 1.4rem;
+            }
+
+            .food-card p {
+                font-size: 1rem;
+            }
+
+            .food-card img {
+                height: 200px;
+            }
+
+            .food-card a.button {
+                font-size: 1rem;
+                padding: 8px 14px;
+            }
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <h1>Seattle Food & Drink</h1>
+
+    {% if food_list %}
+        <div class="food-container">
+            {% for item in food_list %}
+                <div class="food-card fade-in" style="animation-delay: {{ loop.index0 * 0.15 }}s;">
+                    <img src="{{ url_for('static', filename=item.image) }}" alt="{{ item.name }}">
+                    <h2>🍴 {{ item.name }}</h2>
+                    <p><strong>Type:</strong> {{ item.type }}</p>
+                    <p><strong>Address:</strong> {{ item.address }}</p>
+                    <a href="{{ item.url }}" target="_blank" class="button">Visit</a>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p style="text-align: center; font-size: 1.2rem; color:#2f6b2f;">No food & drink spots available.</p>
+    {% endif %}
+
+    <script>
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = 1;
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, {
+            threshold: 0.1
+        });
+
+        document.querySelectorAll('.food-card').forEach(card => observer.observe(card));
+    </script>
+{% endblock %}
