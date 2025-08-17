@@ -1,25 +1,53 @@
-Seattle Now – Final Project
+# 🌆 Seattle Now
 
-A Flask website that shows local Seattle weather, events, news, and attractions using free APIs.
+**Seattle Now** is my personal project to showcase local Seattle info.  
+It’s a **Flask website** featuring **weather, events, news, food, history, attractions, and activities**.
 
-Features
+---
 
-Current Seattle weather from OpenWeatherMap
+## 🚀 Features
 
-Upcoming events from Ticketmaster
+- **Weather Updates** 🌤️ — Current Seattle weather  
+- **Events & Sports** 🎫🏈⚾⚽ — Ticketmaster events with fun emojis  
+- **News** 📰 — Local news aggregated from multiple sources  
+- **Curated Content** 🍽️🏛️ — Food spots, history, attractions, and things to do  
+- **Responsive Design** 💻📱 — Looks great on desktop and mobile
 
-Latest news from multiple Seattle news sources
+---
 
-Curated local content: food, attractions, history, and things to do
+## 📸 Screenshots
 
-Demo
+![Homepage Screenshot](img/screenshots/homepage.png)  
+![Attractions Screenshot](img/screenshots/attractions.png)  
 
-[Coming soon: live site link]
+*(Add more screenshots as desired)*
 
-Screenshots
+---
 
-(optional: add 1–2 screenshots of your site here)
+## 🔗 Live Demo
 
-About the Project
+> Coming soon!  
+> You can view it locally by running the Flask app if you want to explore.
 
-Built as a final project for Harvard CS50, but designed to showcase local Seattle information for anyone interested.
+---
+
+## 💡 About
+
+Built with **Flask, HTML, CSS, JS** and free APIs:  
+
+- **OpenWeatherMap API** — weather  
+- **Ticketmaster API** — events & sports  
+- **RSS feeds** — local news  
+
+Designed to be interactive and visually engaging for showcasing web development skills.
+
+---
+
+## 📫 Contact / Suggestions
+
+Reach me on Instagram for feedback or suggestions:  
+[@YourInstagramHandle](https://instagram.com/YourInstagramHandle)
+
+---
+
+**© 2025 Seattle Now**
