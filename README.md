@@ -15,9 +15,9 @@ It’s a **Flask website** featuring **weather, events, news, food, history, att
 
 ---
 
-## 🔗 Live Demo
+## 🔗 Live project: 
 
-> Coming soon!  
+https://seattle-now.onrender.com  
 
 ---
 
