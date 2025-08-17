@@ -18,7 +18,6 @@ It’s a **Flask website** featuring **weather, events, news, food, history, att
 ## 🔗 Live Demo
 
 > Coming soon!  
-> You can view it locally by running the Flask app if you want to explore.
 
 ---
 
