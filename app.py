@@ -221,6 +221,12 @@ ACTIVITIES_LIST = [
     },
 ]
 
+SOCIALS_LIST = [
+    {"name": "Instagram", "link": "https://www.instagram.com/seattlenow_/", "icon": "img/socials/ig.jpg"},
+    {"name": "Facebook", "link": "https://www.facebook.com/seattlenowofficial", "icon": "img/socials/fb.jpg"},
+    {"name": "TikTok", "link": "https://www.tiktok.com/@seattlenow_", "icon": "img/socials/tt.jpg"},
+    {"name": "YouTube", "link": "https://www.youtube.com/@SeattleNow", "icon": "img/socials/yt.jpg"}
+]
 
 # --- Functions ---
 
@@ -442,6 +448,9 @@ def attractions():
 def things_to_do():
     return render_template("things_to_do.html", activities_list=ACTIVITIES_LIST)
 
+@app.route("/socials")
+def socials():
+    return render_template("socials.html", socials_list=SOCIALS_LIST)
 
 if __name__ == "__main__":
     app.run(debug=True)

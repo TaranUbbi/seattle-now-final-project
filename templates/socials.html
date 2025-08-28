@@ -1,0 +1,139 @@
+{% extends "base.html" %}
+{% block title %}Socials{% endblock %}
+
+{% block head %}
+<style>
+    /* Container */
+    .socials-container {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 45px;              /* bigger gap for more breathing room */
+        width: 95%;
+        max-width: 1200px;      /* wider container */
+        margin: 0 auto;
+    }
+
+    @media (min-width: 768px) {
+        .socials-container {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 50px;
+        }
+    }
+
+    /* Card */
+    .social-card {
+        background-color: #c8e7c3;
+        box-shadow: 0 10px 25px rgba(27, 58, 46, 0.22);
+        border-radius: 18px;
+        padding: 45px;          /* scaled up padding */
+        text-align: center;
+        transition: transform 0.3s, box-shadow 0.3s, background 0.3s;
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    .social-card:hover {
+        transform: translateY(-8px) scale(1.05);
+        box-shadow: 0 18px 40px rgba(27, 58, 46, 0.28);
+        background-color: #d4f0d9;
+    }
+
+    /* Images */
+    .social-card img {
+        width: 220px;       /* much bigger */
+        height: 220px;
+        margin-bottom: 25px;
+        transition: transform 0.3s;
+    }
+
+    .social-card:hover img {
+        transform: scale(1.07);
+    }
+
+    /* Titles */
+    .social-card h2 {
+        font-size: 2rem;
+        margin-bottom: 18px;
+        color: #1b3a2e;
+    }
+
+    /* Paragraph */
+    .social-card p {
+        font-size: 1.3rem;
+        margin-bottom: 25px;
+        color: #2f6b2f;
+    }
+
+    /* Button */
+    .social-card a.button {
+        display: inline-block;
+        padding: 16px 28px;
+        border-radius: 10px;
+        background: linear-gradient(135deg, #4caf50, #2f6f4e);
+        color: #fff;
+        text-decoration: none;
+        font-weight: bold;
+        font-size: 1.2rem;
+        transition: transform 0.3s, background 0.3s, box-shadow 0.3s;
+    }
+
+    .social-card a.button:hover {
+        background: linear-gradient(135deg, #3e8a3a, #27613e);
+        transform: scale(1.05);
+        box-shadow: 0 8px 22px rgba(27, 58, 46, 0.3);
+    }
+
+    /* Header */
+    h1 {
+        text-align: center;
+        margin-bottom: 70px;
+        font-size: 3rem;
+        color: #2f6f4e;
+    }
+
+    /* Fade-in animation */
+    .fade-in {
+        animation: fadeInUp 0.8s forwards;
+    }
+
+    @keyframes fadeInUp {
+        0% {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        100% {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+</style>
+{% endblock %}
+
+{% block content %}
+<h1>Connect with Seattle Now 🌲</h1>
+
+<div class="socials-container">
+    {% for social in socials_list %}
+        <div class="social-card fade-in" style="animation-delay: {{ loop.index0 * 0.15 }}s;">
+            <img src="{{ url_for('static', filename=social.icon) }}" alt="{{ social.name }}">
+            <h2>{{ social.name }}</h2>
+            <p>Follow us on {{ social.name }} for the latest updates.</p>
+            <a href="{{ social.link }}" target="_blank" class="button">Visit {{ social.name }}</a>
+        </div>
+    {% endfor %}
+</div>
+
+<script>
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = 1;
+                entry.target.style.transform = 'translateY(0)';
+            }
+        });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.social-card').forEach(card => observer.observe(card));
+</script>
+{% endblock %}
